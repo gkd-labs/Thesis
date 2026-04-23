@@ -1,7 +1,7 @@
 """
 Constructs molecular graphs with 19 node features mapped to a 29D space, 7 bond attributes mapped to 7D space. Laplacian positional encodings (PE) will be computed for each node in the 
 spectra graph. PE has a dimension of 51.
-"""
+
 Generate pytorch geometry Data objects for molecules. Nodes, Edges and PE in Data object.
 The program automatically saves to your output directory, which is recommended be same as input directory. Data object(s) is/are a list(s)
 """
