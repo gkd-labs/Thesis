@@ -25,7 +25,7 @@ def predict_with_simple_ensemble(dataset_path, checkpoint1_path, checkpoint2_pat
         'num_layers': 8,
         'd_ff': 1536,
         'num_freqs': 16,
-        'dropout': 0.2
+        'dropout': 0.0
     }
 
     model1 = load_model_from_checkpoint(checkpoint1_path, model_params, device)
@@ -65,7 +65,7 @@ def predict_with_weighted_ensemble(dataset_path, checkpoint1_path, checkpoint2_p
         'num_layers': 8,
         'd_ff': 1536,
         'num_freqs': 16,
-        'dropout': 0.2
+        'dropout': 0.0
     }
 
     model1 = load_model_from_checkpoint(checkpoint1_path, model_params, device)
