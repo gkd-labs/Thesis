@@ -32,7 +32,7 @@ def run_simple_ensemble(dataset_path, checkpoint1_path, checkpoint2_path, device
         'num_layers': 8,
         'd_ff': 1536,
         'num_freqs': 16,
-        'dropout': 0.2
+        'dropout': 0.0
     }
 
     # Load model checkpoints at epochs 92 and 95. At these epochs, train loss were 0.11597 and 0.11474 respectively. Var mae was also 0.10663 and 0.10626 respectively
@@ -76,7 +76,7 @@ def run_weighted_ensemble(dataset_path, checkpoint1_path, checkpoint2_path, mae1
         'num_layers': 8,
         'd_ff': 1536,
         'num_freqs': 16,
-        'dropout': 0.2
+        'dropout': 0.0
     }
 
     # Load models
