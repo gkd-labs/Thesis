@@ -26,7 +26,7 @@ def predict_with_best_model(dataset_path, best_checkpoint_path, device="cuda"):
         'num_layers': 6,
         'd_ff': 1024,
         'num_freqs': 16,
-        'dropout': 0.2
+        'dropout': 0.0
     }
 
     # Load the best model
