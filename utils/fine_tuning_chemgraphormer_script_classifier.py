@@ -38,7 +38,11 @@ def train_one_epoch(model, loader, optimizer, device, scaler):
     """Train the model (CrossEntropy loss for classification)."""
     model.train()
     total_loss = 0
-    class_weights = torch.tensor([0.5, 0.5]).to(device)
+
+    # Class weights from training label frequencies (inverse frequency: w_c = N / (2 * n_c))
+    train_labels = torch.tensor([int(d.y.view(-1)[0].item()) for d in loader.dataset])
+    class_counts = torch.bincount(train_labels, minlength=2).float()
+    class_weights = (class_counts.sum() / (2.0 * class_counts.clamp(min=1))).to(device)
 
     for batch in tqdm(loader, desc="Train", leave=False, dynamic_ncols=True):
         batch = move_batch_to_device(batch, device)
