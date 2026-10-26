@@ -16,6 +16,12 @@ def move_batch_to_device(batch, device):
                 setattr(batch, attr, tensor.to(device))
     return batch
 
+def random_sign_flip(lap_pos, batch_idx, num_graphs):
+    """Flip each Laplacian eigenvector independently, per graph (training-time augmentation)."""
+    signs = torch.randint(0, 2, (num_graphs, lap_pos.size(1)),
+                          device=lap_pos.device).to(lap_pos.dtype) * 2 - 1
+    return lap_pos * signs[batch_idx]
+
 def build_optimizer(model, lr_multiplier):
     return torch.optim.AdamW([
         {"params": model.encoder.embed.parameters(), "lr": lr_multiplier * 1e-4},
@@ -42,6 +48,7 @@ def train_one_epoch(model, loader, optimizer, device):
     scaler = torch.amp.GradScaler('cuda')
     for batch in tqdm(loader, desc="Train", leave=False, dynamic_ncols=True):
         batch = move_batch_to_device(batch, device)
+        batch.lap_pos = random_sign_flip(batch.lap_pos, batch.batch, batch.num_graphs)
         optimizer.zero_grad()
         with autocast('cuda'):
             pred = model(batch)
