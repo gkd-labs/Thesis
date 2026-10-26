@@ -28,6 +28,12 @@ def move_batch_to_device(batch, device):
                 setattr(batch, attr, tensor.to(device))
     return batch
 
+def random_sign_flip(lap_pos, batch_idx, num_graphs):
+    """Flip each Laplacian eigenvector independently, per graph (training-time augmentation)."""
+    signs = torch.randint(0, 2, (num_graphs, lap_pos.size(1)),
+                          device=lap_pos.device).to(lap_pos.dtype) * 2 - 1
+    return lap_pos * signs[batch_idx]
+
 def count_parameters(model):
     """Count total and trainable parameters."""
     total = sum(p.numel() for p in model.parameters())
@@ -46,6 +52,7 @@ def train_one_epoch(model, loader, optimizer, device, scaler):
 
     for batch in tqdm(loader, desc="Train", leave=False, dynamic_ncols=True):
         batch = move_batch_to_device(batch, device)
+        batch.lap_pos = random_sign_flip(batch.lap_pos, batch.batch, batch.num_graphs)
         optimizer.zero_grad(set_to_none=True)
 
         with torch.amp.autocast(device_type="cuda"):
